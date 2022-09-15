@@ -4,7 +4,7 @@
 ARG VARIANT="16-bullseye"
 FROM mcr.microsoft.com/vscode/devcontainers/javascript-node:0-${VARIANT}
 
-ARG SOLC_VERSION=0.7.6
+ARG SOLC_VERSION=0.5.9
 ARG SLITHER_VERSION=0.8.3
 
 # [Optional] Uncomment this section to install additional OS packages.

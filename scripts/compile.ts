@@ -11,8 +11,9 @@ dotenv.config()
 export async function ensureDirectoryExists(absoluteDirectoryPath: string) {
 	try {
 		await filesystem.mkdir(absoluteDirectoryPath)
-	} catch (error) {
-		if (error.code === 'EEXIST') return
+	} catch (error: unknown) {
+		const err: NodeJS.ErrnoException = error as NodeJS.ErrnoException;
+		if (err.code === 'EEXIST') return
 		throw error
 	}
 }
@@ -32,8 +33,8 @@ async function writeFactoryDeployerTransaction(contract: CompilerOutputContract,
 	const value = 0
 	const data = arrayFromHexString(deploymentBytecode)
 
-	if (!process.env.MNEMONIC) throw Error("MNEMONIC is required")
-	const signer = ethers.Wallet.fromMnemonic(process.env.MNEMONIC!!)
+	if (!process.env.MNEMONIC && !process.env.PK) throw Error("MNEMONIC or PK is required")
+	const signer = process.env.PK ? new ethers.Wallet(process.env.PK) : ethers.Wallet.fromMnemonic(process.env.MNEMONIC!!)
 	const signedEncodedTransaction = await signer.signTransaction({
 		nonce, gasPrice, gasLimit, value, data, chainId
 	})
@@ -58,7 +59,7 @@ function arrayFromNumber(value: number): Uint8Array {
 
 function arrayFromHexString(value: string): Uint8Array {
 	const normalized = (value.length % 2) ? `0${value}` : value
-	const bytes = []
+	const bytes: number[] = []
 	for (let i = 0; i < normalized.length; i += 2) {
 		bytes.push(Number.parseInt(`${normalized[i]}${normalized[i+1]}`, 16))
 	}
