@@ -35,7 +35,7 @@
   ],
   "author": "richard@gnosis.io",
   "bugs": {
-    "url": "https://github.com/rmeissner/hardhat-safe-deployer/issues"
+    "url": "https://github.com/timloh-enjinstarter/safe-global-safe-singleton-factory/issues"
   },
   "devDependencies": {
     "@types/mocha": "^8.2.0",
